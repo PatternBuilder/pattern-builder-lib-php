@@ -1,0 +1,106 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Card",
+    "description": "A Card",
+    "type": "object",
+    "properties": {
+        "name": {
+          "type": "string",
+          "readonly": "true",
+          "default": "card",
+          "options": {
+            "hidden": true
+          }
+        },
+        "template": {
+          "type": "string",
+          "options": {
+            "hidden": true
+          }
+        },
+        "theme": {
+            "description": "",
+            "type": "string",
+            "enum": [ "dark", "light"]
+        },
+        "background": {
+            "description": "",
+            "type": "string",
+            "enum": [ "black", "rich-black", "white", "gray"]
+        },
+        "alt_theme": {
+            "type": "object",
+            "required": ["theme", "trigger"],
+            "properties": {
+                "theme": {
+                    "description": "",
+                    "type": "string",
+                    "enum": [ "dark", "light"]
+                },
+                "background": {
+                    "description": "",
+                    "type": "string",
+                    "enum": [ "black", "rich-black", "white", "gray"]
+                },
+                "trigger": {
+                    "description": "",
+                    "type": "string",
+                    "enum": [ "click", "hover"]
+                }
+            }
+        },
+        "background_large": {
+            "description": "",
+            "propertyOrder": 1,
+            "type": "string"
+        },
+        "background_fixed" :{
+            "type": "boolean",
+            "propertyOrder": 3
+        },
+        "eqpts": {
+            "description": "",
+            "type": "string"
+        },
+        "justify": {
+            "description": "",
+            "type": "string",
+            "enum": [ "center", "top", "justify"]
+        },
+        "header_content": {
+            "title": "Card Header",
+            "description": "",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {"$ref": "cta.json"}
+                ]
+            }
+        },
+        "body_content": {
+            "title": "Card Body",
+            "description": "",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "oneOf": [
+                    {"$ref": "cta.json"}
+                ]
+            }
+        },
+        "footer_content": {
+            "title": "Card Footer",
+            "description": "",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {"$ref": "cta.json"}
+                ]
+            }
+        }
+    },
+    "required": ["body_content", "theme", "eqpts"],
+    "additionalProperties": false
+}
+
+

@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Standard Band",
+    "description": "A Standard Band",
+    "type": "object",
+    "properties": {
+        "content": {
+            "title": "Content Body",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "oneOf": [
+                    {"$ref": "text.json"}
+                ]
+            }
+        }
+    },
+    "additionalProperties": false
+}

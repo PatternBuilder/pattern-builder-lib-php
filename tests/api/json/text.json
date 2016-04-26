@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Text",
+  "description": "Text schema",
+  "type": "object",
+  "properties": {
+    "value": {
+      "description": "Text in the call to action link",
+      "type": "string"
+    }
+  },
+  "required": ["value"]
+}

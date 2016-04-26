@@ -1,0 +1,29 @@
+{
+    "name": "pattern-builder/pattern-builder",
+    "description": "Provides the integration of JSON pattern schemas.",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.3",
+        "psr/log": "^1.0",
+        "justinrainbow/json-schema": "~1.4",
+        "twig/twig": "1.18.*"
+    },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "^1.8.1",
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "PatternBuilder\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PatternBuilder\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "cs": "php-cs-fixer fix src || [ $? = 1 ]",
+        "test": "phpunit"
+    }
+}
