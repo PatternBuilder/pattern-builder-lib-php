@@ -128,15 +128,23 @@ class ComponentTest extends AbstractTest
         $text->set('value', null);
         $this->assertTrue($text->isEmpty('value', 'The text value is once again empty'));
 
-        /*
-        @todo: This should maybe pass?
-
         // Instantiate an empty composite component
         $composite = $this->getComponent('composite');
+        $this->assertTrue($composite->isEmpty('content'), 'The composite initially has no content');
 
-        // Set the empty text component as the composites content.
+        // Set a non empty text as the content.
+        $text->set('value', 'A non empty value');
         $composite->set('content', $text);
-        $this->assertTrue($composite->isEmpty('content'), 'The composite has no content');
-        */
+        $this->assertFalse($composite->isEmpty('content'), 'The composite has content');
+
+        // Update child component to a null value.
+        $text->set('value', null);
+        $this->assertTrue($composite->isEmpty('content'), 'The composite content is empty after the child is set to null');
+
+        // Add a new non-empty component.
+        $other_text = $this->getComponent('text');
+        $other_text->set('value', 'A non empty value');
+        $composite->set('content', $other_text);
+        $this->assertFalse($composite->isEmpty('content'), 'The composite has content after a non-empty child was added');
     }
 }

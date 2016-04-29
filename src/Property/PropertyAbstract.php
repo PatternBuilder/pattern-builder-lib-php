@@ -55,8 +55,19 @@ abstract class PropertyAbstract
         elseif (empty($value)) {
             return true;
         }
-        elseif (is_object($value) && ($value instanceof PropertyInterface)) {
-            return $value->isEmpty();
+        elseif (is_object($value)) {
+          if ($value instanceof PropertyInterface) {
+              return $value->isEmpty();
+          }
+          elseif (get_class($value) == 'stdClass') {
+            foreach ($value as $k => $val) {
+                if (!$this->isEmptyValue($val)) {
+                    return false;
+                }
+            }
+
+            return true;
+          }
         }
         elseif (is_array($value)) {
             foreach ($value as $k => $val) {
