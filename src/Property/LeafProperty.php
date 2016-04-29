@@ -64,27 +64,4 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
         return $this->property_value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isEmpty($property_name = NULL)
-    {
-        $value = $this->get();
-        if (!isset($value)) {
-            return true;
-        }
-        elseif (is_object($value) && ($value instanceof PropertyInterface)) {
-            return $value->isEmpty();
-        }
-        elseif (is_bool($value)) {
-            // Booleans are not empty.
-            return false;
-        }
-        elseif ($value !== 0 && empty($value)) {
-            return true;
-        }
-
-        return false;
-    }
-
 }
