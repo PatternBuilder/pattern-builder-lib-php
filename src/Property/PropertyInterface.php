@@ -12,7 +12,7 @@ interface PropertyInterface
      *
      * @return mixed
      */
-    public function get($property_name);
+    public function get($property_name = NULL);
 
     /**
      * Sets the value.
@@ -37,4 +37,14 @@ interface PropertyInterface
      * Prepare this object for rendering.
      */
     public function prepareRender();
+
+    /**
+     * Determine if a given property contains data.
+     *
+     * @param string $property_name The property to check.
+     *
+     * @return bool true if empty, false otherwise.
+     */
+    public function isEmpty($property_name = NULL);
+
 }
