@@ -70,6 +70,35 @@ class ComponentTest extends AbstractTest
     }
 
     /**
+     * Test setting values on a property that is an array.
+     */
+    public function testArraysAsProperties()
+    {
+        $component = $this->getComponent('composite');
+        $this->assertNull($component->get('content'), 'Content Property is null.');
+
+        // Set multiple text components.
+        $set_text_values = array();
+        for ($c = 0; $c < 3; $c++) {
+          $text_component = $this->getComponent('text');
+          $text_value = 'test text ' . $c;
+          $text_component->set('value', $text_value);
+          $set_text_values[$c] = $text_value;
+
+          $component->set('content', $text_component);
+        }
+
+        $values = $component->get('content');
+        $this->assertEquals(is_array($values), true, 'Values is an array');
+        $this->assertEquals(count($values), 3, 'Values has 3 items');
+
+        foreach ($values as $i => $value) {
+          $this->assertEquals($value instanceof \PatternBuilder\Property\Component\Component, true, "Value {$i} is a component");
+          $this->assertEquals($value->get('value'), $set_text_values[$i], 'Value {$i} text string matches the set value');
+        }
+    }
+
+    /**
      * Test Simple Validation.
      */
     public function testSimpleValidation()
