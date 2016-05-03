@@ -16,16 +16,6 @@ abstract class PropertyAbstract
     public $logger;
 
     /**
-     * Gets the set value.
-     *
-     * @param string $property_name
-     *                              Name of the value to get.
-     *
-     * @return mixed
-     */
-    abstract public function get($property_name = NULL);
-
-    /**
      * Sets a logger instance on the object.
      *
      * @param \Psr\Log\LoggerInterface $logger
