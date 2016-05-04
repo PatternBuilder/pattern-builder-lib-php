@@ -70,6 +70,35 @@ class ComponentTest extends AbstractTest
     }
 
     /**
+     * Test setting values on a property that is an array.
+     */
+    public function testArraysAsProperties()
+    {
+        $component = $this->getComponent('composite');
+        $this->assertNull($component->get('content'), 'Content Property is null.');
+
+        // Set multiple text components.
+        $set_text_values = array();
+        for ($c = 0; $c < 3; $c++) {
+          $text_component = $this->getComponent('text');
+          $text_value = 'test text ' . $c;
+          $text_component->set('value', $text_value);
+          $set_text_values[$c] = $text_value;
+
+          $component->set('content', $text_component);
+        }
+
+        $values = $component->get('content');
+        $this->assertEquals(is_array($values), true, 'Values is an array');
+        $this->assertEquals(count($values), 3, 'Values has 3 items');
+
+        foreach ($values as $i => $value) {
+          $this->assertEquals($value instanceof \PatternBuilder\Property\Component\Component, true, "Value {$i} is a component");
+          $this->assertEquals($value->get('value'), $set_text_values[$i], 'Value {$i} text string matches the set value');
+        }
+    }
+
+    /**
      * Test Simple Validation.
      */
     public function testSimpleValidation()
@@ -99,15 +128,23 @@ class ComponentTest extends AbstractTest
         $text->set('value', null);
         $this->assertTrue($text->isEmpty('value', 'The text value is once again empty'));
 
-        /*
-        @todo: This should maybe pass?
-
         // Instantiate an empty composite component
         $composite = $this->getComponent('composite');
+        $this->assertTrue($composite->isEmpty('content'), 'The composite initially has no content');
 
-        // Set the empty text component as the composites content.
+        // Set a non empty text as the content.
+        $text->set('value', 'A non empty value');
         $composite->set('content', $text);
-        $this->assertTrue($composite->isEmpty('content'), 'The composite has no content');
-        */
+        $this->assertFalse($composite->isEmpty('content'), 'The composite has content');
+
+        // Update child component to a null value.
+        $text->set('value', null);
+        $this->assertTrue($composite->isEmpty('content'), 'The composite content is empty after the child is set to null');
+
+        // Add a new non-empty component.
+        $other_text = $this->getComponent('text');
+        $other_text->set('value', 'A non empty value');
+        $composite->set('content', $other_text);
+        $this->assertFalse($composite->isEmpty('content'), 'The composite has content after a non-empty child was added');
     }
 }

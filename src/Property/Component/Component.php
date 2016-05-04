@@ -7,13 +7,14 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
 use PatternBuilder\Property\PropertyInterface;
+use PatternBuilder\Property\PropertyAbstract;
 use PatternBuilder\Factory\ComponentFactory;
 use PatternBuilder\Configuration\Configuration;
 
 /**
  * Class to load a schema object.
  */
-class Component implements LoggerAwareInterface, PropertyInterface
+class Component extends PropertyAbstract implements LoggerAwareInterface, PropertyInterface
 {
     protected $schema;
     protected $property_values;
@@ -31,12 +32,7 @@ class Component implements LoggerAwareInterface, PropertyInterface
      * @var \Twig_Environment
      */
     protected $twig;
-    /**
-     * Logger.
-     *
-     * @var \Psr\Log\LoggerInterface
-     */
-    public $logger;
+
     /**
      * @var \PatternBuilder\Factory\ComponentFactory
      */
@@ -131,16 +127,6 @@ class Component implements LoggerAwareInterface, PropertyInterface
     }
 
     /**
-     * Sets a logger instance on the object.
-     *
-     * @param \Psr\Log\LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    /**
      * Set a property value.
      *
      * @param string $property_name The property name to set a value for.
@@ -204,8 +190,12 @@ class Component implements LoggerAwareInterface, PropertyInterface
      *
      * @return mixed The properties current value. Null if the property does not exist.
      */
-    public function get($property_name)
+    public function get($property_name = NULL)
     {
+        if (!isset($property_name)) {
+          return $this->property_values;
+        }
+
         // @todo: This probably needs a refactor.
         // If this is a component itself just return the component.
         if (isset($this->property_values->$property_name)
@@ -219,26 +209,13 @@ class Component implements LoggerAwareInterface, PropertyInterface
             && is_object($this->property_values->$property_name)
             && $this->property_values->$property_name instanceof PropertyInterface)
         {
-            return $this->property_values->$property_name->get($property_name);
+            return $this->property_values->$property_name->get();
         }
         else if (isset($this->property_values->$property_name)) {
             return $this->property_values->$property_name;
         }
 
         return null;
-    }
-
-    /**
-     * Determine if a given property contains data.
-     *
-     * @param string $property_name The property to check.
-     *
-     * @return bool true if empty, false otherwise.
-     */
-    public function isEmpty($property_name)
-    {
-        $property = $this->get($property_name);
-        return empty($property);
     }
 
     /**

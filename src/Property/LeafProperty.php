@@ -7,17 +7,10 @@ use Psr\Log\LoggerInterface;
 
 use PatternBuilder\Configuration\Configuration;
 
-class LeafProperty implements PropertyInterface, LoggerAwareInterface
+class LeafProperty extends PropertyAbstract implements PropertyInterface, LoggerAwareInterface
 {
     protected $property_value;
     protected $schema;
-
-    /**
-     * Logger.
-     *
-     * @var \Psr\Log\LoggerInterface
-     */
-    public $logger;
 
     /**
      * Constructor for the component.
@@ -37,19 +30,11 @@ class LeafProperty implements PropertyInterface, LoggerAwareInterface
     }
 
     /**
-     * Sets a logger instance on the object.
-     *
-     * @param \Psr\Log\LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    /**
      * {@inheritdoc}
+     *
+     * There is sub properties on leafs.
      */
-    public function get($property_name)
+    public function get($property_name = NULL)
     {
         return $this->property_value;
     }
@@ -68,7 +53,7 @@ class LeafProperty implements PropertyInterface, LoggerAwareInterface
 
     public function prepareRender()
     {
-        return $this->get(false);
+        return $this->get();
     }
 
     /**
@@ -78,4 +63,5 @@ class LeafProperty implements PropertyInterface, LoggerAwareInterface
     {
         return $this->property_value;
     }
+
 }
