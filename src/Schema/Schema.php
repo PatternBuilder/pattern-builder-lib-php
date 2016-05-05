@@ -3,12 +3,11 @@
 /**
  * Class to load a schema object.
  */
+
 namespace PatternBuilder\Schema;
 
 use PatternBuilder\Exception\SchemaException;
-use PatternBuilder\Property\Component\Component;
 use PatternBuilder\Configuration\Configuration;
-
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
@@ -45,7 +44,7 @@ abstract class Schema implements LoggerAwareInterface
         // Enforce interface so that any class extending this abstract must
         // implement the SchemaInterface.
         if (!($this instanceof SchemaInterface)) {
-          throw new SchemaException('Schema class "' . get_class($this) . '" does not implement SchemaInterface.');
+            throw new SchemaException('Schema class "'.get_class($this).'" does not implement SchemaInterface.');
         }
     }
 
@@ -164,7 +163,7 @@ abstract class Schema implements LoggerAwareInterface
      */
     protected function getCid($short_name)
     {
-        return 'patternbuilder:' . md5($short_name);
+        return 'patternbuilder:'.md5($short_name);
     }
 
     /**
@@ -181,7 +180,7 @@ abstract class Schema implements LoggerAwareInterface
      * Clear the cached objects for the give schema short name.
      *
      * @param string $short_name
-     *   The schema short machine name.
+     *                           The schema short machine name.
      */
     public function clearCacheByName($short_name)
     {

@@ -1,0 +1,91 @@
+<div class="pb-test-render">
+  {% if header %}
+    <header class="pb-header">
+      {% if header.title %}
+        <h2 class="pb-header--title">{{header.title}}</h2>
+      {% endif %}
+      {% if header.headline %}<h1 class="pb-header--headline">{{header.headline}}</h1>{% endif %}
+      {% if header.summary %}<p class="pb-header--summary">{{header.summary}}</p>{% endif %}
+    </header>
+  {% endif %}
+
+  {% if text %}<h3>Text</h3>
+    <div class="pb-text">{{text}}</div>
+  {% endif %}
+
+  {% if text_readonly %}<h3>Read Only Text</h3>
+    <div class="pb-text-readonly">{{text_readonly}}</div>
+  {% endif %}
+
+  {% if text_escaped %}<h3>Escaped Text</h3>
+    <div class="pb-text-escaped">{{text_escaped}}</div>
+  {% endif %}
+
+  {% if text_html %}<h3>HTML Text</h3>
+    <div class="pb-text-html">{{text_html|raw}}</div>
+  {% endif %}
+
+  {% if not boolean_flag is null %}<h3>Boolean</h3>
+    <div class="pb-boolean">{{ boolean_flag ? 'TRUE': 'FALSE' }}</div>
+  {% endif %}
+
+  {% if not number_integer is null %}<h3>Integer</h3>
+    <div class="pb-number-integer">{{number_integer}}</div>
+  {% endif %}
+
+  {% if not number_number is null %}<h3>Number</h3>
+    <div class="pb-number-number">{{number_number}}</div>
+  {% endif %}
+
+  {% if array_of_strings is iterable %}<h3>Array of Strings</h3>
+    <div class="pb-array-of-strings">
+      {% for item in array_of_strings %}
+        <div class="pb-array-of-strings--item--{{loop.index0}}">{{item}}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if array_of_objects is iterable %}<h3>Array of Objects</h3>
+    <div class="pb-array-of-objects">
+      {% for item in array_of_objects %}
+        <div class="pb-array-with-objects--item--{{loop.index0}}">
+          {% if item.foo %}
+            <div class="pb-array-with-objects--item--{{loop.index0}}--foo">{{ item.foo }}</div>
+          {% endif %}
+          {% if not item.bar is null %}
+            <div class="pb-array-with-objects--item--{{loop.index0}}--bar">{{ item.bar }}</div>
+          {% endif %}
+          {% if not item.baz is null %}
+            <div class="pb-array-with-objects--item--{{loop.index0}}--baz">{{ item.baz ? 'TRUE' : 'FALSE' }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if cta is iterable %}<h1>CTA</h1>
+    <div class="pb-cta-container">
+      {% for item in cta %}
+        {% include item.template ?: item.name ~ '.twig' with item only %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
+
+  {% if image is iterable %}<h1>Image</h1>
+    <div class="pb-image-container">
+      {% for item in image %}
+        {% include item.template ?: item.name ~ '.twig' with item only %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if youtube is iterable %}<h1>Youtube</h1>
+    <div class="pb-youtube-container">
+      {% for item in youtube %}
+        {% include item.template ?: item.name ~ '.twig' with item only %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

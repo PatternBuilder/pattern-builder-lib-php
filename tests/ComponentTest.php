@@ -79,13 +79,13 @@ class ComponentTest extends AbstractTest
 
         // Set multiple text components.
         $set_text_values = array();
-        for ($c = 0; $c < 3; $c++) {
-          $text_component = $this->getComponent('text');
-          $text_value = 'test text ' . $c;
-          $text_component->set('value', $text_value);
-          $set_text_values[$c] = $text_value;
+        for ($c = 0; $c < 3; ++$c) {
+            $text_component = $this->getComponent('text');
+            $text_value = 'test text '.$c;
+            $text_component->set('value', $text_value);
+            $set_text_values[$c] = $text_value;
 
-          $component->set('content', $text_component);
+            $component->set('content', $text_component);
         }
 
         $values = $component->get('content');
@@ -93,8 +93,8 @@ class ComponentTest extends AbstractTest
         $this->assertEquals(count($values), 3, 'Values has 3 items');
 
         foreach ($values as $i => $value) {
-          $this->assertEquals($value instanceof \PatternBuilder\Property\Component\Component, true, "Value {$i} is a component");
-          $this->assertEquals($value->get('value'), $set_text_values[$i], 'Value {$i} text string matches the set value');
+            $this->assertEquals($value instanceof \PatternBuilder\Property\Component\Component, true, "Value {$i} is a component");
+            $this->assertEquals($value->get('value'), $set_text_values[$i], 'Value {$i} text string matches the set value');
         }
     }
 
@@ -126,7 +126,7 @@ class ComponentTest extends AbstractTest
         $this->assertFalse($text->isEmpty('value'), 'The text value is not empty');
 
         $text->set('value', null);
-        $this->assertTrue($text->isEmpty('value', 'The text value is once again empty'));
+        $this->assertTrue($text->isEmpty('value'), 'The text value is once again empty');
 
         // Instantiate an empty composite component
         $composite = $this->getComponent('composite');

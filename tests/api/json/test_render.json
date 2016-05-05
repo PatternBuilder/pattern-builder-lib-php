@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Render Test Component",
+  "description": "Test various rendering of properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "readonly": true,
+      "default": "test_render",
+      "options": {
+        "hidden": true
+      }
+    },
+    "header": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "headline": {
+          "title": "Headline",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      }
+    },
+    "text": {
+      "title": "String",
+      "type": "string"
+    },
+    "text_readonly": {
+      "title": "Read only text",
+      "type": "string",
+      "readonly": true,
+      "default": "READONLY",
+      "options": {
+        "hidden": true
+      }
+    },
+    "text_escaped": {
+      "title": "HTML not allowed",
+      "type": "string"
+    },
+    "text_html": {
+      "title": "HTML allowed",
+      "type": "string"
+    },
+    "boolean_flag": {
+      "title": "Boolean",
+      "type": "boolean",
+      "default": false
+    },
+    "number_integer": {
+      "title": "Integer",
+      "type": "integer"
+    },
+    "number_number": {
+      "title": "Number",
+      "type": "number"
+    },
+    "array_of_strings": {
+      "title": "Array of Strings",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "array_of_objects": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "properties": {
+          "foo": {"type": "string"},
+          "bar": {"type": "number"},
+          "baz": {"type": "boolean"}
+        }
+      }
+    },
+    "cta": {
+      "title": "CTA",
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+          "oneOf": [
+              {"$ref": "cta.json"}
+          ]
+      }
+    },
+    "image": {
+      "title": "Image",
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+          "oneOf": [
+              {"$ref": "image.json"}
+          ]
+      }
+    },
+    "youtube": {
+      "title": "Youtube",
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+          "oneOf": [
+              {"$ref": "youtube.json"}
+          ]
+      }
+    }
+  }
+}

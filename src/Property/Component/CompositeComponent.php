@@ -30,7 +30,7 @@ class CompositeComponent extends Component implements PropertyInterface
      *
      * @return mixed The properties current value. Null if the property does not exist.
      */
-    public function get($property_name = NULL)
+    public function get($property_name = null)
     {
         if (isset($this->property_values)) {
             return $this->property_values;

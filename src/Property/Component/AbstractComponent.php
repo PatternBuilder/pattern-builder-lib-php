@@ -5,14 +5,13 @@ namespace PatternBuilder\Property\Component;
 use JsonSchema;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-
 use PatternBuilder\Factory\ComponentFactory;
 
 /**
  * Class to load a schema object.
  */
-abstract class AbstractComponent implements LoggerAwareInterface {
-
+abstract class AbstractComponent implements LoggerAwareInterface
+{
     protected $schema;
     protected $property_values;
     protected $schema_name;
@@ -32,6 +31,7 @@ abstract class AbstractComponent implements LoggerAwareInterface {
 
     /**
      * Twig environmnt object.
+     *
      * @var \Twig_Environment
      */
     protected $twig;
@@ -51,14 +51,15 @@ abstract class AbstractComponent implements LoggerAwareInterface {
      * @param string        $schema_name   Short name of the schema.
      * @param string        $schema_path   Full path to the schema file.
      */
-    public function __construct($schema, $configuration, $schema_name = null, $schema_path = null) {
+    public function __construct($schema, $configuration, $schema_name = null, $schema_path = null)
+    {
         $this->property_values = new \stdClass();
 
         if ($schema_name) {
             $this->schema_name = $schema_name;
         }
         if ($schema_path) {
-          $this->schema_path = $schema_path;
+            $this->schema_path = $schema_path;
         }
 
         $this->schema = $schema;
@@ -66,7 +67,7 @@ abstract class AbstractComponent implements LoggerAwareInterface {
         $this->twig = $configuration->getTwig();
         $this->configuration = $configuration;
         $this->validator = new JsonSchema\Validator();
-        $retriever = new JsonSchema\Uri\UriRetriever;
+        $retriever = new JsonSchema\Uri\UriRetriever();
         $this->resolver = new JsonSchema\RefResolver($retriever);
         $this->prepareFactory();
     }
@@ -89,6 +90,7 @@ abstract class AbstractComponent implements LoggerAwareInterface {
     protected function getFactory()
     {
         $this->prepareFactory();
+
         return self::$componentFactory;
     }
 
@@ -96,8 +98,6 @@ abstract class AbstractComponent implements LoggerAwareInterface {
      * Sets a logger instance on the object.
      *
      * @param \Psr\Log\LoggerInterface $logger
-     *
-     * @return null
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -111,6 +111,6 @@ abstract class AbstractComponent implements LoggerAwareInterface {
      */
     public function getTheme()
     {
-        return empty($this->schema_name) ? false : $this->schema_name . '.twig';
+        return empty($this->schema_name) ? false : $this->schema_name.'.twig';
     }
 }
