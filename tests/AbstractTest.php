@@ -48,7 +48,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function getComponent($schema_name)
     {
         $schema_filename = $schema_name.'.json';
-        $schema_path = 'file://'.__DIR__.'/api/json/'.$filename;
+        $schema_path = 'file://'.__DIR__.'/api/json/'.$schema_filename;
         $schema_text = $this->getJson($schema_filename);
         if (empty($schema_text)) {
             throw new \PHPUnit_Framework_Exception('Schema '.$schema_name.' cannot be loaded');
