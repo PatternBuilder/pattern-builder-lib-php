@@ -140,8 +140,6 @@ class RenderTest extends AbstractTest
      */
     public function testSchemaReference()
     {
-        $twig = $this->getTwig();
-
         $cta = $this->getComponent('cta');
         $cta->set('type', 'primary');
         $cta->set('href', 'https://www.redhat.com');
