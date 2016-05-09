@@ -5,7 +5,7 @@ namespace PatternBuilder\Test;
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Twig environmnt object.
+     * Twig environment object.
      *
      * @var \Twig_Environment
      */
@@ -17,7 +17,6 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function getConfig()
     {
         $twig = $this->getTwig();
-        $retriever = new \JsonSchema\Uri\UriRetriever();
         $logger = new \Psr\Log\NullLogger();
         $retriever = new \JsonSchema\Uri\UriRetriever();
         $resolver = new \JsonSchema\RefResolver($retriever);

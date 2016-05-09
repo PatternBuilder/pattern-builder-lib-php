@@ -30,7 +30,7 @@ abstract class AbstractComponent implements LoggerAwareInterface
     protected $resolver;
 
     /**
-     * Twig environmnt object.
+     * Twig environment object.
      *
      * @var \Twig_Environment
      */
