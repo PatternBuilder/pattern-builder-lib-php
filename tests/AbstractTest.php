@@ -43,6 +43,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * Instantiate a component object.
      *
      * @param string $schema_name A schema name.
+     *
+     * @return \PatternBuilder\Property\Component\Component The created component object.
      */
     public function getComponent($schema_name)
     {
@@ -79,10 +81,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     /**
      * Helper function to set flat data on a component.
      *
-     * @param \PatternBuilder\Property\PropertyInterface $property
+     * @param \PatternBuilder\Property\PropertyInterface $component
      *                                                             The property / component object.
      * @param array                                      $values
-     *                                                             An array with keys of omponent property name and values to set.
+     *                                                             An array with keys of component property name and values to set.
      */
     public function pbSetComponentValues(\PatternBuilder\Property\PropertyInterface $component, array $values)
     {
