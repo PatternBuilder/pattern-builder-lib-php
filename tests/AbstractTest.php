@@ -13,6 +13,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Provides a mocked Configuration object.
+     *
+     * @return \PatternBuilder\Configuration\Configuration The created configuration object.
      */
     public function getConfig()
     {
@@ -27,6 +29,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Provides a mocked Twig_Environment object.
+     *
+     * @return \Twig_Environment The created Twig environment object.
      */
     public function getTwig()
     {
