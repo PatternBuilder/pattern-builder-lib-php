@@ -4,8 +4,6 @@ namespace PatternBuilder\Property\Component;
 
 use JsonSchema;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-
 use PatternBuilder\Property\PropertyInterface;
 use PatternBuilder\Property\PropertyAbstract;
 use PatternBuilder\Factory\ComponentFactory;
@@ -29,6 +27,7 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
     protected $resolver;
     /**
      * Twig environmnt object.
+     *
      * @var \Twig_Environment
      */
     protected $twig;
@@ -77,9 +76,9 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
      */
     public function __clone()
     {
-        $configuration = clone($this->configuration);
+        $configuration = clone $this->configuration;
         $this->initConfiguration($configuration);
-        $this->validator = clone($this->validator);
+        $this->validator = clone $this->validator;
     }
 
     /**
@@ -87,19 +86,19 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
      *
      * @param Configuration $configuration Optional config object.
      */
-    public function initConfiguration(Configuration $configuration = NULL)
+    public function initConfiguration(Configuration $configuration = null)
     {
         if (isset($configuration)) {
-          $this->configuration = $configuration;
+            $this->configuration = $configuration;
         }
 
         if (isset($this->configuration)) {
-          $this->setLogger($this->configuration->getLogger());
-          $this->twig = $this->configuration->getTwig();
-          $this->resolver = $this->configuration->getResolver();
+            $this->setLogger($this->configuration->getLogger());
+            $this->twig = $this->configuration->getTwig();
+            $this->resolver = $this->configuration->getResolver();
 
-          $this->componentFactory = NULL;
-          $this->prepareFactory();
+            $this->componentFactory = null;
+            $this->prepareFactory();
         }
     }
 
@@ -190,32 +189,29 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
      *
      * @return mixed The properties current value. Null if the property does not exist.
      */
-    public function get($property_name = NULL)
+    public function get($property_name = null)
     {
         if (!isset($property_name)) {
-          return $this->property_values;
+            return $this->property_values;
         }
 
         // @todo: This probably needs a refactor.
         // If this is a component itself just return the component.
         if (isset($this->property_values->$property_name)
             && is_object($this->property_values->$property_name)
-            && get_class($this) == get_class($this->property_values->$property_name))
-        {
+            && get_class($this) == get_class($this->property_values->$property_name)) {
             return $this->property_values->$property_name;
         }
         // If this property is a component itself, just return it's get() method.
         if (isset($this->property_values->$property_name)
             && is_object($this->property_values->$property_name)
-            && $this->property_values->$property_name instanceof PropertyInterface)
-        {
+            && $this->property_values->$property_name instanceof PropertyInterface) {
             return $this->property_values->$property_name->get();
-        }
-        else if (isset($this->property_values->$property_name)) {
+        } elseif (isset($this->property_values->$property_name)) {
             return $this->property_values->$property_name;
         }
 
-        return null;
+        return;
     }
 
     /**

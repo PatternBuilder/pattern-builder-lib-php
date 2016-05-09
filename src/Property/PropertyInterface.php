@@ -12,7 +12,7 @@ interface PropertyInterface
      *
      * @return mixed
      */
-    public function get($property_name = NULL);
+    public function get($property_name = null);
 
     /**
      * Sets the value.
@@ -45,6 +45,5 @@ interface PropertyInterface
      *
      * @return bool true if empty, false otherwise.
      */
-    public function isEmpty($property_name = NULL);
-
+    public function isEmpty($property_name = null);
 }

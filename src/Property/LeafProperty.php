@@ -3,8 +3,6 @@
 namespace PatternBuilder\Property;
 
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-
 use PatternBuilder\Configuration\Configuration;
 
 class LeafProperty extends PropertyAbstract implements PropertyInterface, LoggerAwareInterface
@@ -15,7 +13,7 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
     /**
      * Constructor for the component.
      *
-     * @param object $schema A parsed json schema definition.
+     * @param object        $schema        A parsed json schema definition.
      * @param Configuration $configuration Config object.
      */
     public function __construct($schema, Configuration $configuration)
@@ -34,7 +32,7 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
      *
      * There is sub properties on leafs.
      */
-    public function get($property_name = NULL)
+    public function get($property_name = null)
     {
         return $this->property_value;
     }
@@ -63,5 +61,4 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
     {
         return $this->property_value;
     }
-
 }
