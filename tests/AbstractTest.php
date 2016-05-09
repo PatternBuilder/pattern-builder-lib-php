@@ -73,6 +73,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * Load the compenent json from a given filename.
      *
      * @param string $filename The filename to load json from.
+     *
+     * @return string The contents of the file.
      */
     public function getJson($filename)
     {
@@ -86,9 +88,9 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * Helper function to set flat data on a component.
      *
      * @param \PatternBuilder\Property\PropertyInterface $component
-     *                                                             The property / component object.
+     *                                                              The property / component object.
      * @param array                                      $values
-     *                                                             An array with keys of component property name and values to set.
+     *                                                              An array with keys of component property name and values to set.
      */
     public function pbSetComponentValues(\PatternBuilder\Property\PropertyInterface $component, array $values)
     {
