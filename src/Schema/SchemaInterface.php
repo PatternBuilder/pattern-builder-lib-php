@@ -28,7 +28,7 @@ interface SchemaInterface
     /**
      * Returns the object from system cache.
      *
-     * @param string $cid Cache ID.
+     * @param string    $cid           Cache ID.
      * @param Component $component_obj Component Object
      */
     public function saveCache($cid, Component $component_obj);
@@ -44,5 +44,4 @@ interface SchemaInterface
      * Clear all the cached objects.
      */
     public function clearAllCache();
-
 }
