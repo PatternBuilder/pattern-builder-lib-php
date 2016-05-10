@@ -2,12 +2,10 @@
 
 namespace PatternBuilder\Property;
 
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class PropertyAbstract
 {
-
     /**
      * Logger.
      *
@@ -32,34 +30,29 @@ abstract class PropertyAbstract
      *
      * @return bool true if empty, false otherwise.
      */
-    public function isEmptyValue($value) {
+    public function isEmptyValue($value)
+    {
         if (!isset($value)) {
             return true;
-        }
-        elseif (is_bool($value)) {
+        } elseif (is_bool($value)) {
             return false;
-        }
-        elseif ($value === 0) {
+        } elseif ($value === 0) {
             return false;
-        }
-        elseif (empty($value)) {
+        } elseif (empty($value)) {
             return true;
-        }
-        elseif (is_object($value)) {
-          if ($value instanceof PropertyInterface) {
-              return $value->isEmpty();
-          }
-          elseif (get_class($value) == 'stdClass') {
-            foreach ($value as $k => $val) {
-                if (!$this->isEmptyValue($val)) {
-                    return false;
+        } elseif (is_object($value)) {
+            if ($value instanceof PropertyInterface) {
+                return $value->isEmpty();
+            } elseif (get_class($value) == 'stdClass') {
+                foreach ($value as $k => $val) {
+                    if (!$this->isEmptyValue($val)) {
+                        return false;
+                    }
                 }
-            }
 
-            return true;
-          }
-        }
-        elseif (is_array($value)) {
+                return true;
+            }
+        } elseif (is_array($value)) {
             foreach ($value as $k => $val) {
                 if (!$this->isEmptyValue($val)) {
                     return false;
@@ -79,9 +72,10 @@ abstract class PropertyAbstract
      *
      * @return bool true if empty, false otherwise.
      */
-    public function isEmpty($property_name = NULL)
+    public function isEmpty($property_name = null)
     {
         $value = $this->get($property_name);
+
         return $this->isEmptyValue($value);
     }
 }

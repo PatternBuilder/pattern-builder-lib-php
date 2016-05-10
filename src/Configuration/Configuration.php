@@ -33,9 +33,9 @@ class Configuration
      */
     public function __clone()
     {
-        $this->logger = clone($this->logger);
-        $this->twig = clone($this->twig);
-        $this->resolver = clone($this->resolver);
+        $this->logger = clone $this->logger;
+        $this->twig = clone $this->twig;
+        $this->resolver = clone $this->resolver;
     }
 
     /**
@@ -75,19 +75,18 @@ class Configuration
      */
     public function createResolver()
     {
-      $resolver = $this->getResolver();
-      if (isset($resolver)) {
-        $resolver_class = get_class($resolver);
+        $resolver = $this->getResolver();
+        if (isset($resolver)) {
+            $resolver_class = get_class($resolver);
 
         // Create new retriever.
         $retriever = $resolver->getUriRetriever();
-        if (isset($retriever)) {
-          $retriever_class = get_class($retriever);
-          $new_retriever = new $retriever_class();
-        }
-        else {
-          $new_retriever = new UriRetriever();
-        }
+            if (isset($retriever)) {
+                $retriever_class = get_class($retriever);
+                $new_retriever = new $retriever_class();
+            } else {
+                $new_retriever = new UriRetriever();
+            }
 
         // Store max depth before init since maxDepth is set on the parent.
         $max_depth = $resolver::$maxDepth;
@@ -97,13 +96,12 @@ class Configuration
 
         // Sync public static properties.
         $new_resolver::$maxDepth = $max_depth;
-      }
-      else {
-        $new_retriever = new UriRetriever();
-        $new_resolver = new RefResolver($new_retriever);
-      }
+        } else {
+            $new_retriever = new UriRetriever();
+            $new_resolver = new RefResolver($new_retriever);
+        }
 
-      return $new_resolver;
+        return $new_resolver;
     }
 
     /**

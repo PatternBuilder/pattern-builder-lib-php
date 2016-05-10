@@ -2,11 +2,8 @@
 
 namespace PatternBuilder\Factory;
 
-use JsonSchema;
 use PatternBuilder\Configuration\Configuration;
-use PatternBuilder\Property\LeafProperty;
 use PatternBuilder\Property\Component\Component;
-use PatternBuilder\Property\Component\CompositeComponent;
 
 /**
  * Factory class for instantiation of Component and Property objects.

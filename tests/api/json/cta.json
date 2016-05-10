@@ -1,6 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "CTA",
+    "type": "object",
     "properties": {
         "name": {
           "type": "string",
@@ -35,6 +36,6 @@
             "type": "string"
         }
     },
-    "required": ["type", "text"],
+    "required": ["href", "text"],
     "additionalProperties": false
 }
