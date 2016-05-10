@@ -1,9 +1,10 @@
 <?php
-
 /**
- * Class to load a schema object.
+ * This file is part of the Pattern Builder library.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
-
 namespace PatternBuilder\Schema;
 
 use PatternBuilder\Exception\SchemaException;
@@ -11,6 +12,9 @@ use PatternBuilder\Configuration\Configuration;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class to load a schema object.
+ */
 abstract class Schema implements LoggerAwareInterface
 {
     private $localCache = array();
