@@ -1,5 +1,6 @@
 [![Packagist](https://img.shields.io/packagist/v/pattern-builder/pattern-builder.svg?maxAge=2592000)]()
 [![Packagist](https://img.shields.io/packagist/l/pattern-builder/pattern-builder.svg?maxAge=2592000)]()
+[![Travis](https://img.shields.io/travis/PatternBuilder/pattern-builder-lib-php.svg?maxAge=2592000)](https://travis-ci.org/PatternBuilder/pattern-builder-lib-php)
 
 # Pattern Builder PHP Library
 
