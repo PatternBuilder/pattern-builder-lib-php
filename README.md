@@ -1,5 +1,5 @@
-[![Packagist](https://img.shields.io/packagist/v/pattern-builder/pattern-builder.svg?maxAge=2592000)]()
-[![Packagist](https://img.shields.io/packagist/l/pattern-builder/pattern-builder.svg?maxAge=2592000)]()
+[![Packagist](https://img.shields.io/packagist/v/pattern-builder/pattern-builder.svg?maxAge=2592000)](https://packagist.org/packages/pattern-builder/pattern-builder)
+[![Packagist](https://img.shields.io/packagist/l/pattern-builder/pattern-builder.svg?maxAge=2592000)](LICENSE)
 
 # Pattern Builder PHP Library
 
