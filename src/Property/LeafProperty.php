@@ -9,7 +9,6 @@
 namespace PatternBuilder\Property;
 
 use Psr\Log\LoggerAwareInterface;
-use PatternBuilder\Configuration\Configuration;
 
 class LeafProperty extends PropertyAbstract implements PropertyInterface, LoggerAwareInterface
 {

@@ -54,7 +54,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function getConfig($developer_mode = null)
     {
         $twig = $this->getTwig();
-        $logger = new \Psr\Log\NullLogger();
+        $logger = new TestLogger();
         $retriever = new \JsonSchema\Uri\UriRetriever();
         $resolver = new \JsonSchema\RefResolver($retriever);
 

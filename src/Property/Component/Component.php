@@ -180,9 +180,11 @@ class Component extends PropertyAbstract implements PropertyInterface
                             $error_keys = array(
                               '%name' => $this->schema_name,
                               '%message' => $error['message'],
+                              '%property' => isset($error['property']) ? $error['property'] : 'property',
+                              '%constraint' => isset($error['constraint']) ? $error['constraint'] : 'unknown',
                             );
 
-                            $this->logger->notice('%message in %name', $error_keys);
+                            $this->logger->notice('Schema Validation: "%message" in schema "%name", property "%property" for constraint %constraint', $error_keys);
                         }
                     }
 
