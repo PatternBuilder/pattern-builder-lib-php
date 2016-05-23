@@ -17,6 +17,13 @@ use PatternBuilder\Configuration\Configuration;
 abstract class PropertyAbstract implements LoggerAwareInterface
 {
     /**
+     * The JSON schema object.
+     *
+     * @var object
+     */
+    protected $schema;
+
+    /**
      * Logger.
      *
      * @var \Psr\Log\LoggerInterface
@@ -37,6 +44,23 @@ abstract class PropertyAbstract implements LoggerAwareInterface
      * @var \JsonSchema\Validator
      */
     protected $validator;
+
+    /**
+     * Constructor for the component.
+     *
+     * @param object        $schema        A parsed json schema definition.
+     * @param Configuration $configuration Config object.
+     */
+    public function __construct($schema, Configuration $configuration)
+    {
+        $this->schema = $schema;
+
+        // Initialize native objects based on the configuration.
+        $this->initConfiguration($configuration);
+
+        // Initialize properties.
+        $this->initProperties();
+    }
 
     /**
      * PHP Clone interface.

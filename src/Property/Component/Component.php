@@ -38,20 +38,14 @@ class Component extends PropertyAbstract implements PropertyInterface
      */
     public function __construct($schema, Configuration $configuration, $schema_name = null, $schema_path = null)
     {
+        parent::__construct($schema, $configuration);
+
         if ($schema_name) {
             $this->schema_name = $schema_name;
         }
         if ($schema_path) {
             $this->schema_path = $schema_path;
         }
-
-        $this->schema = $schema;
-
-        // Initialize native objects based on the configuration.
-        $this->initConfiguration($configuration);
-
-        // Initialize properties.
-        $this->initProperties();
     }
 
     /**

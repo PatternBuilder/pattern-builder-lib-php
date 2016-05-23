@@ -14,24 +14,6 @@ use PatternBuilder\Configuration\Configuration;
 class LeafProperty extends PropertyAbstract implements PropertyInterface, LoggerAwareInterface
 {
     protected $property_value;
-    protected $schema;
-
-    public function getSchema()
-    {
-        return $this->schema;
-    }
-    /**
-     * Constructor for the component.
-     *
-     * @param object        $schema        A parsed json schema definition.
-     * @param Configuration $configuration Config object.
-     */
-    public function __construct($schema, Configuration $configuration)
-    {
-        $this->schema = $schema;
-        $this->initConfiguration($configuration);
-        $this->initProperties();
-    }
 
     /**
      * Initialize the property.
