@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Standard Band",
-    "description": "A Standard Band",
+    "title": "Composite",
+    "description": "A Composite component",
     "type": "object",
     "properties": {
         "content": {
@@ -10,7 +10,8 @@
             "minItems": 1,
             "items": {
                 "oneOf": [
-                    {"$ref": "text.json"}
+                    {"$ref": "text.json"},
+                    {"$ref": "cta.json"}
                 ]
             }
         }

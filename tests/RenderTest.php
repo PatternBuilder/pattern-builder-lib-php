@@ -5,10 +5,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PatternBuilder\Test;
 
 class RenderTest extends AbstractTest
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        // Enable developer mode so that schemas are validated before render.
+        $this->developer_mode = true;
+    }
+
     /**
      * Assert values are within the rendered markup.
      *
@@ -19,14 +31,18 @@ class RenderTest extends AbstractTest
      */
     protected function checkMarkupContainsValues($markup, array $assert_values)
     {
-        $ignore_case = false;
-        foreach ($assert_values as $key => $value) {
-            if (is_array($value)) {
-                $this->checkMarkupContainsValues($markup, $value);
-            } else {
-                $message = "The property {$key} value is present in the rendered markup.";
-                $this->assertContains($value, $markup, $message, $ignore_case);
+        if ($markup) {
+            $ignore_case = false;
+            foreach ($assert_values as $key => $value) {
+                if (is_array($value)) {
+                    $this->checkMarkupContainsValues($markup, $value);
+                } else {
+                    $message = "The property {$key} value is present in the rendered markup.";
+                    $this->assertContains($value, $markup, $message, $ignore_case);
+                }
             }
+        } else {
+            $this->assertNotEmpty($markup, 'The rendered markup is empty.');
         }
     }
 

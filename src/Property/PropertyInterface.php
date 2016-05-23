@@ -5,10 +5,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PatternBuilder\Property;
 
 interface PropertyInterface
 {
+    /**
+     * Initialize the property values with empty or default values.
+     */
+    public function initProperties();
+
     /**
      * Gets the set value.
      *
@@ -51,4 +57,25 @@ interface PropertyInterface
      * @return bool true if empty, false otherwise.
      */
     public function isEmpty($property_name = null);
+
+    /**
+     * Return an instance of the component factory for use.
+     *
+     * @return ComponentFactory
+     */
+    public function getFactory();
+
+    /**
+     * Return an instance of the component configuration.
+     *
+     * @return Configuration
+     */
+    public function getConfiguration();
+
+    /**
+     * Return an instance of the component configuration.
+     *
+     * @return Configuration
+     */
+    public function getValidator();
 }

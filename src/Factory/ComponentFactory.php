@@ -5,6 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PatternBuilder\Factory;
 
 use PatternBuilder\Configuration\Configuration;
@@ -23,7 +24,6 @@ class ComponentFactory
     public $logger;
 
     protected $twig;
-    protected $validator;
     protected $configuration;
 
     /**

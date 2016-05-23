@@ -23,7 +23,7 @@
         }
     },
     "scripts": {
-        "cs": "php-cs-fixer fix src || [ $? = 1 ]",
+        "cs": "php-cs-fixer fix src || [ $? = 1 ]; php-cs-fixer fix tests || [ $? = 1 ]",
         "test": "phpunit"
     }
 }
