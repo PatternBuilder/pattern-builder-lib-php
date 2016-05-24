@@ -54,6 +54,16 @@ abstract class Schema implements LoggerAwareInterface
     }
 
     /**
+     * Return an instance of the component configuration.
+     *
+     * @return Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
      * Sets a logger instance on the object.
      *
      * @param \Psr\Log\LoggerInterface $logger
