@@ -46,6 +46,8 @@ interface PropertyInterface
 
     /**
      * Prepare this object for rendering.
+     *
+     * @return mixed
      */
     public function prepareRender();
 

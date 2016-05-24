@@ -52,7 +52,12 @@ class ComponentFactory
             $Class = 'PatternBuilder\Property\LeafProperty';
         }
 
-        return new $Class($properties, $this->configuration);
+        $instance = new $Class($properties, $this->configuration);
+        if ($schema_path && method_exists($instance, 'setSchemaPath')) {
+            $instance->setSchemaPath($schema_path);
+        }
+
+        return $instance;
     }
 
     /**

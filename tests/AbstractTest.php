@@ -25,6 +25,26 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected $developer_mode = false;
 
     /**
+     * The directory containing the JSON schemas.
+     *
+     * @return string The directory.
+     */
+    public function getSchemaDir()
+    {
+        return __DIR__.'/api/json';
+    }
+
+    /**
+     * The directory containing the TWIG templates.
+     *
+     * @return string The directory.
+     */
+    public function getTemplateDir()
+    {
+        return __DIR__.'/api/templates';
+    }
+
+    /**
      * Get the developer mode.
      *
      * @return bool The current value.
@@ -74,7 +94,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function getTwig()
     {
         if (!isset($this->twig)) {
-            $template_paths = array(__DIR__.'/api/templates');
+            $template_paths = array($this->getTemplateDir());
             $twig_loader = new \Twig_Loader_Filesystem($template_paths);
             $this->twig = new \Twig_Environment($twig_loader);
         }
@@ -105,7 +125,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     public function getComponent($schema_name, $developer_mode = null)
     {
         $schema_filename = $schema_name.'.json';
-        $schema_path = 'file://'.__DIR__.'/api/json/'.$schema_filename;
+        $schema_path = 'file://'.$this->getSchemaDir().'/'.$schema_filename;
         $schema_text = $this->getJson($schema_filename);
         if (empty($schema_text)) {
             throw new \PHPUnit_Framework_Exception('Schema '.$schema_name.' cannot be loaded');
@@ -130,7 +150,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function getJson($filename)
     {
-        $filepath = __DIR__.'/api/json/'.$filename;
+        $filepath = $this->getSchemaDir().'/'.$filename;
         if (file_exists($filepath)) {
             return file_get_contents($filepath);
         }
@@ -153,6 +173,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $factory = $this->getComponentFactory();
         }
 
+        // Get schema path for factory resolving.
+        if (method_exists($component, 'getSchemaPath')) {
+            $schema_path = $component->getSchemaPath();
+        } else {
+            // Fake path for child resolving.
+            $schema_path = 'file://'.$this->getSchemaDir().'/__nothing.json';
+        }
+
         $check_schema_property = method_exists($component, 'getSchemaProperty');
         foreach ($values as $key => $value) {
             $schema_property = null;
@@ -165,10 +193,17 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
             if (isset($schema_property->items->properties) && is_array($value)) {
                 // Create array of items based on the item schema.
-                foreach ($value as $delta => $item_values) {
-                    $item = $factory->create($schema_property->items, null);
+                $top_delta = key($value);
+                if (is_numeric($top_delta)) {
+                    $property_values = $value;
+                } else {
+                    $property_values = array($value);
+                }
+
+                foreach ($property_values as $delta => $item_values) {
+                    $child_values = is_array($item_values) ? $item_values : array($item_values);
+                    $item = $factory->create($schema_property->items, $schema_path);
                     if ($item) {
-                        $child_values = is_array($item_values) ? $item_values : array($item_values);
                         $this->pbSetComponentValues($item, $child_values);
                         $component->set($key, $item);
                     }

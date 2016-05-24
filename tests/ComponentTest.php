@@ -237,6 +237,13 @@ class ComponentTest extends AbstractTest
         $text_component = $this->getComponent('text');
         $text_component->set('value', 'text value');
 
+        $cta_component = $this->getComponent('cta');
+        $cta_component->set('text', 'link text');
+        $cta_component->set('href', 'https://www.redhat.com');
+
+        $cta_invalid_component = $this->getComponent('cta');
+        $cta_invalid_component->set('text', 'link text');
+
         $object_component = $this->getComponent('object');
         $object_component->set('link', array(
             'title' => 'Link title',
@@ -251,6 +258,24 @@ class ComponentTest extends AbstractTest
                     'values' => array('content' => $text_component),
                 ),
                 array(
+                    'type' => 'pass',
+                    'scenario' => 'Composite schema with content set to a valid cta component.',
+                    'values' => array('content' => $cta_component),
+                ),
+                array(
+                    'type' => 'pass',
+                    'scenario' => 'Composite schema with multiple valid content items.',
+                    'values' => array('content' => array(
+                            $cta_component,
+                            $text_component,
+                    )),
+                ),
+                array(
+                    'type' => 'fail',
+                    'scenario' => 'Composite schema with content set to an invalid cta component.',
+                    'values' => array('content' => $cta_invalid_component),
+                ),
+                array(
                     'type' => 'fail',
                     'scenario' => 'Composite schema with content set to an invalid component.',
                     'values' => array('content' => $object_component),
@@ -260,22 +285,47 @@ class ComponentTest extends AbstractTest
                     'scenario' => 'Composite schema with content set a string instead of a component.',
                     'values' => array('content' => 'text'),
                 ),
+                array(
+                    'type' => 'pass',
+                    'scenario' => 'Composite schema with valid single object item.',
+                    'values' => array(
+                        'objects' => array(
+                            'object' => $object_component,
+                            'quote' => array(
+                                'text' => 'Test quoted text',
+                                'author' => 'tester',
+                            ),
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'pass',
+                    'scenario' => 'Composite schema with valid multiple object items.',
+                    'values' => array(
+                        'objects' => array(
+                            array(
+                                'object' => $object_component,
+                                'quote' => array(
+                                    'text' => 'Test quoted text',
+                                    'author' => 'tester',
+                                ),
+                            ),
+                            array(
+                                'object' => $object_component,
+                                'quote' => array(
+                                    'text' => 'Test quoted text 2',
+                                    'author' => 'tester 2',
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             ),
         );
 
         // Run the tests.
         $this->checkSchemaTests($schema_tests);
     }
-
-    /**
-     * Test Complex Validation.
-     */
-    /*
-    public function testComplexValidation()
-    {
-
-    }
-    */
 
     /**
      * Test the Component::isEmpty() method.

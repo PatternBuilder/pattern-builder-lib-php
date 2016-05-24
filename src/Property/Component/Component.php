@@ -49,6 +49,36 @@ class Component extends PropertyAbstract implements PropertyInterface
     }
 
     /**
+     * Get the schema machine name.
+     *
+     * @return string The schema machine name.
+     */
+    public function getSchemaName()
+    {
+        return $this->schema_name;
+    }
+
+    /**
+     * Get the schema path.
+     *
+     * @return string The schema path.
+     */
+    public function getSchemaPath()
+    {
+        return $this->schema_path;
+    }
+
+    /**
+     * Set the schema path.
+     *
+     * @param string  The schema path.
+     */
+    public function setSchemaPath($schema_path)
+    {
+        $this->schema_path = $schema_path;
+    }
+
+    /**
      * Initialize the configuration and related native objects.
      *
      * @param Configuration $configuration Optional config object.
@@ -143,26 +173,27 @@ class Component extends PropertyAbstract implements PropertyInterface
     /**
      * Validate a properties value.
      *
-     * @param object $template_variables Full object/array of all property values. Defaults to the current property values.
-     * @param bool   $notify             True to log any validation errors. Defaults to false.
+     * @param object $values Full object/array of all property values. Defaults to the current property values.
+     * @param bool   $notify True to log any validation errors. Defaults to false.
      *
      * @return bool|array True if the values are valid, otherwise an array of errors per JsonSchema\Validator::getErrors().
      */
-    public function validate($template_variables = null, $notify = false)
+    public function validate($values = null, $notify = false)
     {
         $validator = $this->getValidator();
         if ($validator) {
             // Expand the schema.
             // TODO: recurse & $value->validate() instead?
-            $this->resolver->resolve($this->schema, $this->schema_path);
+            $schema = clone $this->schema;
+            $this->resolver->resolve($schema, $this->schema_path);
 
             // Set to current values if none provided.
-            if (!isset($template_variables)) {
-                $template_variables = $this->prepareRender();
+            if (!isset($values)) {
+                $values = $this->prepareRender();
             }
 
-            if (isset($template_variables)) {
-                $validator->check($template_variables, $this->schema);
+            if (isset($values)) {
+                $validator->check($values, $schema);
                 if (!$validator->isValid()) {
                     $errors = $validator->getErrors();
                     if (empty($errors)) {
@@ -186,6 +217,11 @@ class Component extends PropertyAbstract implements PropertyInterface
 
                             $this->logger->notice('Schema Validation: "%message" in schema "%name", property "%property" for constraint %constraint', $error_keys);
                         }
+                    }
+
+                    if ($this->schema_name == 'composite') {
+                        //$this->logger->alert("\n" . print_r($schema,1). "\n");
+//$this->logger->alert("values\n" . print_r($values,1). "\n");
                     }
 
                     return $errors;
@@ -270,7 +306,11 @@ class Component extends PropertyAbstract implements PropertyInterface
     {
         $template_variables = new \stdClass();
         foreach ($this->property_values as $property_name => $value) {
-            $template_variables->$property_name = $value->prepareRender();
+            if (is_object($value) && method_exists($value, 'prepareRender')) {
+                $template_variables->$property_name = $value->prepareRender();
+            } else {
+                $template_variables->$property_name = $value;
+            }
         }
 
         return $template_variables;

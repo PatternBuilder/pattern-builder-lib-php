@@ -80,6 +80,16 @@ abstract class PropertyAbstract implements LoggerAwareInterface
     }
 
     /**
+     * Get the schema object.
+     *
+     * @return object|null The schema object.
+     */
+    public function getSchema()
+    {
+        return $this->schema;
+    }
+
+    /**
      * Initialize the configuration and related native objects.
      *
      * @param Configuration $configuration Optional config object.
