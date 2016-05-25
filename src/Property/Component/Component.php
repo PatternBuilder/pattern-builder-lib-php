@@ -171,14 +171,45 @@ class Component extends PropertyAbstract implements PropertyInterface
     }
 
     /**
+     * Get a properties value.
+     *
+     * @param string $property_name The property to get the current value for.
+     *
+     * @return mixed The properties current value. Null if the property does not exist.
+     */
+    public function get($property_name = null)
+    {
+        if (!isset($property_name)) {
+            return $this->property_values;
+        }
+
+        // @todo: This probably needs a refactor.
+        // If this is a component itself just return the component.
+        if (isset($this->property_values->$property_name)
+            && is_object($this->property_values->$property_name)
+            && get_class($this) == get_class($this->property_values->$property_name)) {
+            return $this->property_values->$property_name;
+        }
+        // If this property is a component itself, just return it's get() method.
+        if (isset($this->property_values->$property_name)
+            && is_object($this->property_values->$property_name)
+            && $this->property_values->$property_name instanceof PropertyInterface) {
+            return $this->property_values->$property_name->get();
+        } elseif (isset($this->property_values->$property_name)) {
+            return $this->property_values->$property_name;
+        }
+
+        return;
+    }
+
+    /**
      * Validate a properties value.
      *
-     * @param object $values Full object/array of all property values. Defaults to the current property values.
      * @param bool   $notify True to log any validation errors. Defaults to false.
      *
      * @return bool|array True if the values are valid, otherwise an array of errors per JsonSchema\Validator::getErrors().
      */
-    public function validate($values = null, $notify = false)
+    public function validate($notify = false)
     {
         $validator = $this->getValidator();
         if ($validator) {
@@ -187,11 +218,8 @@ class Component extends PropertyAbstract implements PropertyInterface
             $schema = clone $this->schema;
             $this->resolver->resolve($schema, $this->schema_path);
 
-            // Set to current values if none provided.
-            if (!isset($values)) {
-                $values = $this->prepareRender();
-            }
-
+            // Set to current values.
+            $values = $this->values();
             if (isset($values)) {
                 $validator->check($values, $schema);
                 if (!$validator->isValid()) {
@@ -228,38 +256,6 @@ class Component extends PropertyAbstract implements PropertyInterface
     }
 
     /**
-     * Get a properties value.
-     *
-     * @param string $property_name The property to get the current value for.
-     *
-     * @return mixed The properties current value. Null if the property does not exist.
-     */
-    public function get($property_name = null)
-    {
-        if (!isset($property_name)) {
-            return $this->property_values;
-        }
-
-        // @todo: This probably needs a refactor.
-        // If this is a component itself just return the component.
-        if (isset($this->property_values->$property_name)
-            && is_object($this->property_values->$property_name)
-            && get_class($this) == get_class($this->property_values->$property_name)) {
-            return $this->property_values->$property_name;
-        }
-        // If this property is a component itself, just return it's get() method.
-        if (isset($this->property_values->$property_name)
-            && is_object($this->property_values->$property_name)
-            && $this->property_values->$property_name instanceof PropertyInterface) {
-            return $this->property_values->$property_name->get();
-        } elseif (isset($this->property_values->$property_name)) {
-            return $this->property_values->$property_name;
-        }
-
-        return;
-    }
-
-    /**
      * Render the object.
      */
     public function render()
@@ -267,14 +263,7 @@ class Component extends PropertyAbstract implements PropertyInterface
         $template_variables = $this->prepareRender();
 
         if ($this->configuration->developerMode()) {
-            $this->validate($template_variables, true);
-        }
-
-        // Set template property if the schema does not define it.
-        // This must happen after developer validation since the property will
-        // not validate.
-        if (!isset($template_variables->template) && ($theme = $this->getTheme())) {
-            $template_variables->template = $theme;
+            $this->validate(true);
         }
 
         // Decode/encode turns the full array/object into an array.
@@ -295,7 +284,7 @@ class Component extends PropertyAbstract implements PropertyInterface
     }
 
     /**
-     * Prepare this object for rendering.
+     * {@inheritdoc}
      */
     public function prepareRender()
     {
@@ -308,7 +297,31 @@ class Component extends PropertyAbstract implements PropertyInterface
             }
         }
 
+        // Set template property if the schema does not define it.
+        // This must happen after developer validation since the property will
+        // not validate.
+        if (!isset($template_variables->template) && ($theme = $this->getTheme())) {
+            $template_variables->template = $theme;
+        }
+
         return $template_variables;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function values()
+    {
+        $values = new \stdClass();
+        foreach ($this->property_values as $property_name => $value) {
+            if (is_object($value) && method_exists($value, 'values')) {
+                $values->$property_name = $value->values();
+            } else {
+                $values->$property_name = $value;
+            }
+        }
+
+        return $values;
     }
 
     /**

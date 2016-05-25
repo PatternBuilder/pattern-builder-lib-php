@@ -66,6 +66,23 @@ class CompositeComponent extends Component implements PropertyInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function values()
+    {
+        $values = array();
+        foreach ($this->property_values as $i => $value) {
+            if (is_object($value) && method_exists($value, 'values')) {
+                $values[$i] = $value->values();
+            } else {
+                $values[$i] = $value;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * Prepare this object for rendering.
      */
     public function prepareRender()

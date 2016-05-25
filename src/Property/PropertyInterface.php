@@ -52,6 +52,13 @@ interface PropertyInterface
     public function prepareRender();
 
     /**
+     * Extract flatten property values.
+     *
+     * @return mixed
+     */
+    public function values();
+
+    /**
      * Determine if a given property contains data.
      *
      * @param string $property_name The property to check.
