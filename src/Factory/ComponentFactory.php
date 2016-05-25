@@ -44,17 +44,20 @@ class ComponentFactory
             $resolver->resolve($properties, $schema_path);
         }
 
+        $is_component = true;
         if ($properties->type == 'array') {
             $Class = 'PatternBuilder\Property\Component\CompositeComponent';
         } elseif ($properties->type == 'object') {
             $Class = 'PatternBuilder\Property\Component\Component';
         } else {
             $Class = 'PatternBuilder\Property\LeafProperty';
+            $is_component = false;
         }
 
-        $instance = new $Class($properties, $this->configuration);
-        if ($schema_path && method_exists($instance, 'setSchemaPath')) {
-            $instance->setSchemaPath($schema_path);
+        if ($schema_path && $is_component) {
+            $instance = new $Class($properties, $this->configuration, null, $schema_path);
+        } else {
+            $instance = new $Class($properties, $this->configuration);
         }
 
         return $instance;
