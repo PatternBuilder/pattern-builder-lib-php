@@ -219,11 +219,6 @@ class Component extends PropertyAbstract implements PropertyInterface
                         }
                     }
 
-                    if ($this->schema_name == 'composite') {
-                        //$this->logger->alert("\n" . print_r($schema,1). "\n");
-//$this->logger->alert("values\n" . print_r($values,1). "\n");
-                    }
-
                     return $errors;
                 }
             }
