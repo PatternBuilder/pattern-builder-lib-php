@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.8.1",
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8|^5"
     },
     "autoload": {
         "psr-4": {
