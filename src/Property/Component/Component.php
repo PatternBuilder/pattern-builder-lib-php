@@ -108,7 +108,7 @@ class Component extends PropertyAbstract implements PropertyInterface
     {
         if (!empty($this->schema->properties)) {
             foreach ($this->schema->properties as $property_name => $property) {
-                if (isset($property->default)) {
+                if ($this->setPropertyDefaultValue($property)) {
                     $this->property_values->$property_name = $this->getFactory()->create($property, $this->schema_path);
                 }
             }

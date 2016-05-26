@@ -28,7 +28,7 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
      */
     public function initDefaultProperties()
     {
-        if (isset($this->schema->default)) {
+        if (isset($this->schema) && $this->setPropertyDefaultValue($this->schema)) {
             $this->property_value = $this->schema->default;
         }
     }

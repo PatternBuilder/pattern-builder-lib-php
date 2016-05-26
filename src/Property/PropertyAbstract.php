@@ -90,6 +90,28 @@ abstract class PropertyAbstract implements LoggerAwareInterface
     }
 
     /**
+     * Set the default value for the property schema.
+     *
+     * @param object $property The property JSON object.
+     *
+     * @return bool True if the default is set.
+     */
+    public function setPropertyDefaultValue($property)
+    {
+        if (isset($property->default)) {
+            // Use the defined default.
+            return true;
+        } elseif (isset($property->enum) && count($property->enum) == 1) {
+            // Set default to single enum.
+            $property->default = reset($property->enum);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Initialize the configuration and related native objects.
      *
      * @param Configuration $configuration Optional config object.
