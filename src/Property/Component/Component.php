@@ -205,7 +205,7 @@ class Component extends PropertyAbstract implements PropertyInterface
     /**
      * Validate a properties value.
      *
-     * @param bool   $notify True to log any validation errors. Defaults to false.
+     * @param bool $notify True to log any validation errors. Defaults to false.
      *
      * @return bool|array True if the values are valid, otherwise an array of errors per JsonSchema\Validator::getErrors().
      */
