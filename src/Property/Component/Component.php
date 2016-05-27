@@ -297,14 +297,30 @@ class Component extends PropertyAbstract implements PropertyInterface
             }
         }
 
-        // Set template property if the schema does not define it.
-        // This must happen after developer validation since the property will
-        // not validate.
-        if (!isset($template_variables->template) && ($theme = $this->getTheme())) {
-            $template_variables->template = $theme;
-        }
+        $this->prepareTemplateVariables($template_variables);
 
         return $template_variables;
+    }
+
+    /**
+     * Prepare template variables.
+     *
+     * Add in template variables required for rendering but might not be in
+     * the JSON schema.
+     *
+     * @param object $variables The template variables.
+     */
+    public function prepareTemplateVariables($variables)
+    {
+        // Set name property if the schema does not define it.
+        if (!isset($variables->name) && !empty($this->schema_name)) {
+            $variables->name = $this->schema_name;
+        }
+
+        // Set template property if the schema does not define it.
+        if (!isset($variables->template) && ($theme = $this->getTheme())) {
+            $variables->template = $theme;
+        }
     }
 
     /**
