@@ -9,7 +9,6 @@
 namespace PatternBuilder\Factory;
 
 use PatternBuilder\Configuration\Configuration;
-use PatternBuilder\Property\Component\Component;
 
 /**
  * Factory class for instantiation of Component and Property objects.

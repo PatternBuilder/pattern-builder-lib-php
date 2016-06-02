@@ -71,7 +71,7 @@ class Component extends PropertyAbstract implements PropertyInterface
     /**
      * Set the schema path.
      *
-     * @param string  The schema path.
+     * @param string The schema path.
      */
     public function setSchemaPath($schema_path)
     {

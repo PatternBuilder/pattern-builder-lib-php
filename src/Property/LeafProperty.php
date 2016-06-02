@@ -19,7 +19,7 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
      */
     public function initProperties()
     {
-        $this->property_values = null;
+        $this->property_value = null;
         $this->initDefaultProperties();
     }
 
