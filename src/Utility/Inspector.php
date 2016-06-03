@@ -8,6 +8,9 @@
 
 namespace PatternBuilder\Utility;
 
+/**
+ * Generic inspections of values.
+ */
 class Inspector
 {
     /**

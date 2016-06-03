@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use PatternBuilder\Factory\ComponentFactory;
 use PatternBuilder\Configuration\Configuration;
 use PatternBuilder\Utility\Inspector;
+use PatternBuilder\Utility\Flatten;
 
 abstract class PropertyAbstract implements LoggerAwareInterface
 {
@@ -213,5 +214,47 @@ abstract class PropertyAbstract implements LoggerAwareInterface
         $value = $this->get($property_name);
 
         return Inspector::isEmpty($value);
+    }
+
+    /**
+     * Invoke a method on all stored values.
+     *
+     * @param string $method The method name to call on all values.
+     *
+     * @return \stdClass|array|null The flatten values.
+     */
+    protected function invoke($method)
+    {
+        $value = $this->value();
+
+        return Flatten::byObjectMethod($value, $method);
+    }
+
+    /**
+     * Create a flattened value by calling a method on all stored values.
+     *
+     * @param string $method The method name to call on all values.
+     *
+     * @return \stdClass|array|null The flatten values.
+     */
+    public function flatValue()
+    {
+        return $this->invoke('flatValue');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepareRender()
+    {
+        return $this->invoke('prepareRender');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render()
+    {
+        return $this->invoke('render');
     }
 }

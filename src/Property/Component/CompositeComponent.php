@@ -68,52 +68,19 @@ class CompositeComponent extends Component implements PropertyInterface
     /**
      * {@inheritdoc}
      */
-    public function values()
-    {
-        $values = array();
-        foreach ($this->property_values as $i => $value) {
-            if (is_object($value) && method_exists($value, 'values')) {
-                $values[$i] = $value->values();
-            } else {
-                $values[$i] = $value;
-            }
-        }
-
-        return $values;
-    }
-
-    /**
-     * Prepare this object for rendering.
-     */
-    public function prepareRender()
-    {
-        $template_variables = array();
-        foreach ($this->property_values as $i => $value) {
-            if (is_object($value) && method_exists($value, 'prepareRender')) {
-                $template_variables[$i] = $value->prepareRender();
-            } else {
-                $template_variables[$i] = $value;
-            }
-        }
-
-        return $template_variables;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function render()
     {
-        $result = array();
-        foreach ($this->property_values as $property_name => $value) {
-            if (is_object($value) && method_exists($value, 'render')) {
-                $template_variables[$property_name] = $value->render();
-            } elseif (is_scalar($value)) {
-                $template_variables[$property_name] = $value;
+        $rendered = '';
+        $renders = $this->invoke('render');
+        if ($renders) {
+            foreach ($renders as $render) {
+                if (is_scalar($render)) {
+                    $rendered .= $render;
+                }
             }
         }
 
-        return $result ? implode('', $result) : '';
+        return $rendered;
     }
 
     /**

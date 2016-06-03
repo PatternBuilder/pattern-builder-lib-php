@@ -140,6 +140,14 @@ class Component extends PropertyAbstract implements PropertyInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function value()
+    {
+        return $this->property_values;
+    }
+
+    /**
      * Set a property value.
      *
      * @param string $property_name The property name to set a value for.
@@ -219,7 +227,7 @@ class Component extends PropertyAbstract implements PropertyInterface
             $this->resolver->resolve($schema, $this->schema_path);
 
             // Set to current values.
-            $values = $this->values();
+            $values = $this->flatValue();
             if (isset($values)) {
                 $validator->check($values, $schema);
                 if (!$validator->isValid()) {
@@ -288,15 +296,7 @@ class Component extends PropertyAbstract implements PropertyInterface
      */
     public function prepareRender()
     {
-        $template_variables = new \stdClass();
-        foreach ($this->property_values as $property_name => $value) {
-            if (is_object($value) && method_exists($value, 'prepareRender')) {
-                $template_variables->$property_name = $value->prepareRender();
-            } else {
-                $template_variables->$property_name = $value;
-            }
-        }
-
+        $template_variables = parent::prepareRender();
         $this->prepareTemplateVariables($template_variables);
 
         return $template_variables;
@@ -312,6 +312,10 @@ class Component extends PropertyAbstract implements PropertyInterface
      */
     public function prepareTemplateVariables($variables)
     {
+        if (!isset($variables)) {
+            $variables = new \stdClass();
+        }
+
         // Set name property if the schema does not define it.
         if (!isset($variables->name) && !empty($this->schema_name)) {
             $variables->name = $this->schema_name;
@@ -321,23 +325,6 @@ class Component extends PropertyAbstract implements PropertyInterface
         if (!isset($variables->template) && ($theme = $this->getTheme())) {
             $variables->template = $theme;
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function values()
-    {
-        $values = new \stdClass();
-        foreach ($this->property_values as $property_name => $value) {
-            if (is_object($value) && method_exists($value, 'values')) {
-                $values->$property_name = $value->values();
-            } else {
-                $values->$property_name = $value;
-            }
-        }
-
-        return $values;
     }
 
     /**

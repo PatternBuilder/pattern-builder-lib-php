@@ -58,9 +58,9 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
     /**
      * {@inheritdoc}
      */
-    public function values()
+    public function value()
     {
-        return $this->get();
+        return $this->property_value;
     }
 
     /**
@@ -68,7 +68,7 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
      */
     public function prepareRender()
     {
-        return $this->get();
+        return $this->value();
     }
 
     /**
@@ -76,6 +76,6 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
      */
     public function render()
     {
-        return $this->get();
+        return $this->value();
     }
 }

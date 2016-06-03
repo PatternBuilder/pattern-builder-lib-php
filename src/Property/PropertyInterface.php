@@ -16,6 +16,13 @@ interface PropertyInterface
     public function initProperties();
 
     /**
+     * Returns all of the stored property values.
+     *
+     * @return mixed
+     */
+    public function value();
+
+    /**
      * Gets the set value.
      *
      * @param string $property_name
@@ -50,13 +57,6 @@ interface PropertyInterface
      * @return mixed
      */
     public function prepareRender();
-
-    /**
-     * Extract flatten property values.
-     *
-     * @return mixed
-     */
-    public function values();
 
     /**
      * Determine if a given property contains data.
