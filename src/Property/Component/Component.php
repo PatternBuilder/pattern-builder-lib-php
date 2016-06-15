@@ -3,24 +3,20 @@
 namespace PatternBuilder\Property\Component;
 
 use JsonSchema;
-use Psr\Log\LoggerAwareInterface;
 use PatternBuilder\Property\PropertyInterface;
 use PatternBuilder\Property\PropertyAbstract;
-use PatternBuilder\Factory\ComponentFactory;
 use PatternBuilder\Configuration\Configuration;
 
 /**
  * Class to load a schema object.
  */
-class Component extends PropertyAbstract implements LoggerAwareInterface, PropertyInterface
+class Component extends PropertyAbstract implements PropertyInterface
 {
     protected $schema;
     protected $property_values;
     protected $schema_name;
     protected $schema_path;
 
-    protected $configuration;
-    protected $validator;
     /**
      * @var \JsonSchema\RefResolver
      */
@@ -31,11 +27,6 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
      * @var \Twig_Environment
      */
     protected $twig;
-
-    /**
-     * @var \PatternBuilder\Factory\ComponentFactory
-     */
-    protected $componentFactory;
 
     /**
      * Constructor for the component.
@@ -54,31 +45,37 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
             $this->schema_path = $schema_path;
         }
 
-        $this->schema = $schema;
-
-        // Initialize native objects based on the configuration.
-        $this->initConfiguration($configuration);
-
-        // Initialize JSON validator.
-        $this->validator = new JsonSchema\Validator();
-
-        // Initialize properties.
-        $this->initProperties();
+        parent::__construct($schema, $configuration);
     }
 
     /**
-     * PHP Clone interface.
+     * Get the schema machine name.
      *
-     * Reset properties and object references.
-     *
-     * NOTE: This object will not be instanced again, so any additions to
-     * __construct() must be added.
+     * @return string The schema machine name.
      */
-    public function __clone()
+    public function getSchemaName()
     {
-        $configuration = clone $this->configuration;
-        $this->initConfiguration($configuration);
-        $this->validator = clone $this->validator;
+        return $this->schema_name;
+    }
+
+    /**
+     * Get the schema path.
+     *
+     * @return string The schema path.
+     */
+    public function getSchemaPath()
+    {
+        return $this->schema_path;
+    }
+
+    /**
+     * Set the schema path.
+     *
+     * @param string The schema path.
+     */
+    public function setSchemaPath($schema_path)
+    {
+        $this->schema_path = $schema_path;
     }
 
     /**
@@ -88,17 +85,10 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
      */
     public function initConfiguration(Configuration $configuration = null)
     {
-        if (isset($configuration)) {
-            $this->configuration = $configuration;
-        }
-
+        parent::initConfiguration($configuration);
         if (isset($this->configuration)) {
-            $this->setLogger($this->configuration->getLogger());
             $this->twig = $this->configuration->getTwig();
             $this->resolver = $this->configuration->getResolver();
-
-            $this->componentFactory = null;
-            $this->prepareFactory();
         }
     }
 
@@ -118,7 +108,7 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
     {
         if (!empty($this->schema->properties)) {
             foreach ($this->schema->properties as $property_name => $property) {
-                if (isset($property->default)) {
+                if ($this->setPropertyDefaultValue($property)) {
                     $this->property_values->$property_name = $this->getFactory()->create($property, $this->schema_path);
                 }
             }
@@ -150,6 +140,14 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function value()
+    {
+        return $this->property_values;
+    }
+
+    /**
      * Set a property value.
      *
      * @param string $property_name The property name to set a value for.
@@ -178,31 +176,6 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
         }
 
         return $this;
-    }
-
-    /**
-     * Validate a properties value.
-     *
-     * @param object $template_variables Full object/array of all property values.
-     *
-     * @return bool True if the value is valid, false otherwise.
-     */
-    private function validate($template_variables)
-    {
-        $this->resolver->resolve($this->schema, $this->schema_path);
-        $this->validator->check($template_variables, $this->schema);
-        if (!$this->validator->isValid()) {
-            foreach ($this->validator->getErrors() as $error) {
-                $error_keys = array(
-                  '%name' => $this->schema_name,
-                  '%message' => $error['message'],
-                );
-
-                $this->logger->notice('%message in %name', $error_keys);
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -238,6 +211,59 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
     }
 
     /**
+     * Validate a properties value.
+     *
+     * @param bool $notify True to log any validation errors. Defaults to false.
+     *
+     * @return bool|array True if the values are valid, otherwise an array of errors per JsonSchema\Validator::getErrors().
+     */
+    public function validate($notify = false)
+    {
+        $validator = $this->getValidator();
+        if ($validator) {
+            // Expand the schema.
+            // TODO: recurse & $value->validate() instead?
+            $schema = clone $this->schema;
+            $this->resolver->resolve($schema, $this->schema_path);
+
+            // Set to current values.
+            $values = $this->flatValue();
+            if (isset($values)) {
+                $validator->check($values, $schema);
+                if (!$validator->isValid()) {
+                    $errors = $validator->getErrors();
+                    if (empty($errors)) {
+                        // Create a top level schema error since something is wrong.
+                        $errors = array(array(
+                            'property' => $this->schema_path,
+                            'message' => 'The JSON schema failed validation.',
+                            'constraint' => null,
+                        ));
+                    }
+
+                    // Log errors.
+                    if ($notify) {
+                        foreach ($errors as $error) {
+                            $error_keys = array(
+                              '%name' => $this->schema_name,
+                              '%message' => $error['message'],
+                              '%property' => isset($error['property']) ? $error['property'] : 'property',
+                              '%constraint' => isset($error['constraint']) ? $error['constraint'] : 'unknown',
+                            );
+
+                            $this->logger->notice('Schema Validation: "%message" in schema "%name", property "%property" for constraint %constraint', $error_keys);
+                        }
+                    }
+
+                    return $errors;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Render the object.
      */
     public function render()
@@ -245,30 +271,60 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
         $template_variables = $this->prepareRender();
 
         if ($this->configuration->developerMode()) {
-            $this->validate($template_variables);
+            $this->validate(true);
         }
+
         // Decode/encode turns the full array/object into an array.
         // Just typecasting to an array does not recursively apply it.
         $template_array = json_decode(json_encode($template_variables), true);
 
-        return $this->twig->render($template_variables->template, $template_array);
+        if (!empty($template_variables->template)) {
+            return $this->twig->render($template_variables->template, $template_array);
+        } else {
+            $log_vars = array('%schema' => '');
+            if (isset($this->schema_name)) {
+                $log_vars['%schema'] = $this->schema_name;
+            } elseif (isset($this->schema_path)) {
+                $log_vars['%schema'] = $this->schema_path;
+            }
+            $this->logger->notice('Cannot render: Missing template property in schema %schema.', $log_vars);
+        }
     }
 
     /**
-     * Prepare this object for rendering.
+     * {@inheritdoc}
      */
     public function prepareRender()
     {
-        $template_variables = new \stdClass();
-        foreach ($this->property_values as $property_name => $value) {
-            $template_variables->$property_name = $value->prepareRender();
-        }
-
-        if (!isset($template_variables->template) && ($theme = $this->getTheme())) {
-            $template_variables->template = $theme;
-        }
+        $template_variables = parent::prepareRender();
+        $this->prepareTemplateVariables($template_variables);
 
         return $template_variables;
+    }
+
+    /**
+     * Prepare template variables.
+     *
+     * Add in template variables required for rendering but might not be in
+     * the JSON schema.
+     *
+     * @param object $variables The template variables.
+     */
+    public function prepareTemplateVariables($variables)
+    {
+        if (!isset($variables)) {
+            $variables = new \stdClass();
+        }
+
+        // Set name property if the schema does not define it.
+        if (!isset($variables->name) && !empty($this->schema_name)) {
+            $variables->name = $this->schema_name;
+        }
+
+        // Set template property if the schema does not define it.
+        if (!isset($variables->template) && ($theme = $this->getTheme())) {
+            $variables->template = $theme;
+        }
     }
 
     /**
@@ -279,27 +335,5 @@ class Component extends PropertyAbstract implements LoggerAwareInterface, Proper
     public function getTheme()
     {
         return empty($this->schema_name) ? false : $this->schema_name.'.twig';
-    }
-
-    /**
-     * Prepare an instance of a component factory for usage.
-     */
-    protected function prepareFactory()
-    {
-        if (empty($this->componentFactory) && isset($this->configuration)) {
-            $this->componentFactory = new ComponentFactory($this->configuration);
-        }
-    }
-
-    /**
-     * Return an instance of the component factory for use.
-     *
-     * @return ComponentFactory
-     */
-    protected function getFactory()
-    {
-        $this->prepareFactory();
-
-        return $this->componentFactory;
     }
 }

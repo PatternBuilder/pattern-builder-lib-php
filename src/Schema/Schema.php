@@ -5,6 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PatternBuilder\Schema;
 
 use PatternBuilder\Exception\SchemaException;
@@ -50,6 +51,16 @@ abstract class Schema implements LoggerAwareInterface
         if (!($this instanceof SchemaInterface)) {
             throw new SchemaException('Schema class "'.get_class($this).'" does not implement SchemaInterface.');
         }
+    }
+
+    /**
+     * Return an instance of the component configuration.
+     *
+     * @return Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 
     /**

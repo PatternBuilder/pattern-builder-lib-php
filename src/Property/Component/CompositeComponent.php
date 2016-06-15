@@ -11,16 +11,34 @@ class CompositeComponent extends Component implements PropertyInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @param object                   $schema      A parsed json schema definition.
-     * @param \Psr\Log\LoggerInterface $logger      Static class to call when returning log messages.
-     * @param \Twig_Environment        $twig        Twig object.
-     * @param string                   $schema_name Short name of the schema.
      */
-    public function __construct($schema, $configuration, $schema_name = null)
+    public function initProperties()
     {
-        parent::__construct($schema, $configuration, $schema_name);
         $this->property_values = array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initDefaultProperties()
+    {
+        return;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function schemaPropertyExists($property_name)
+    {
+        return !empty($this->schema->properties);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSchemaProperty($property_name)
+    {
+        return empty($this->schema->properties) ? null : $this->schema->properties;
     }
 
     /**
@@ -48,41 +66,21 @@ class CompositeComponent extends Component implements PropertyInterface
     }
 
     /**
-     * Prepare this object for rendering.
-     */
-    public function prepareRender()
-    {
-        $template_variables = array();
-        foreach ($this->property_values as $property_name => $value) {
-            if (is_object($value)) {
-                if (method_exists($value, 'prepareRender')) {
-                    $template_variables[$property_name] = $value->prepareRender();
-                }
-            } elseif (is_scalar($value)) {
-                $template_variables[$property_name] = $value;
-            }
-        }
-
-        return $template_variables;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function render()
     {
-        $result = array();
-        foreach ($this->property_values as $property_name => $value) {
-            if (is_object($value)) {
-                if (method_exists($value, 'render')) {
-                    $template_variables[$property_name] = $value->render();
+        $rendered = '';
+        $renders = $this->invoke('render');
+        if ($renders) {
+            foreach ($renders as $render) {
+                if (is_scalar($render)) {
+                    $rendered .= $render;
                 }
-            } elseif (is_scalar($value)) {
-                $template_variables[$property_name] = $value;
             }
         }
 
-        return $result ? implode('', $result) : '';
+        return $rendered;
     }
 
     /**

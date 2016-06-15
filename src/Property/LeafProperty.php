@@ -5,29 +5,30 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PatternBuilder\Property;
 
 use Psr\Log\LoggerAwareInterface;
-use PatternBuilder\Configuration\Configuration;
 
 class LeafProperty extends PropertyAbstract implements PropertyInterface, LoggerAwareInterface
 {
     protected $property_value;
-    protected $schema;
 
     /**
-     * Constructor for the component.
-     *
-     * @param object        $schema        A parsed json schema definition.
-     * @param Configuration $configuration Config object.
+     * Initialize the property.
      */
-    public function __construct($schema, Configuration $configuration)
+    public function initProperties()
     {
-        $this->schema = $schema;
-        $this->setLogger($configuration->getLogger());
+        $this->property_value = null;
+        $this->initDefaultProperties();
+    }
 
-        // Set a default if it exists.
-        if (!empty($this->schema->default)) {
+    /**
+     * Instantiate the property default value.
+     */
+    public function initDefaultProperties()
+    {
+        if (isset($this->schema) && $this->setPropertyDefaultValue($this->schema)) {
             $this->property_value = $this->schema->default;
         }
     }
@@ -54,9 +55,20 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function value()
+    {
+        return $this->property_value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function prepareRender()
     {
-        return $this->get();
+        return $this->value();
     }
 
     /**
@@ -64,6 +76,6 @@ class LeafProperty extends PropertyAbstract implements PropertyInterface, Logger
      */
     public function render()
     {
-        return $this->property_value;
+        return $this->value();
     }
 }

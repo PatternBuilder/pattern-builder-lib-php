@@ -5,10 +5,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace PatternBuilder\Factory;
 
 use PatternBuilder\Configuration\Configuration;
-use PatternBuilder\Property\Component\Component;
 
 /**
  * Factory class for instantiation of Component and Property objects.
@@ -23,7 +23,6 @@ class ComponentFactory
     public $logger;
 
     protected $twig;
-    protected $validator;
     protected $configuration;
 
     /**
@@ -44,15 +43,23 @@ class ComponentFactory
             $resolver->resolve($properties, $schema_path);
         }
 
+        $is_component = true;
         if ($properties->type == 'array') {
             $Class = 'PatternBuilder\Property\Component\CompositeComponent';
         } elseif ($properties->type == 'object') {
             $Class = 'PatternBuilder\Property\Component\Component';
         } else {
             $Class = 'PatternBuilder\Property\LeafProperty';
+            $is_component = false;
         }
 
-        return new $Class($properties, $this->configuration);
+        if ($schema_path && $is_component) {
+            $instance = new $Class($properties, $this->configuration, null, $schema_path);
+        } else {
+            $instance = new $Class($properties, $this->configuration);
+        }
+
+        return $instance;
     }
 
     /**

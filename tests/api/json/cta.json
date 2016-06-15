@@ -6,7 +6,7 @@
         "name": {
           "type": "string",
           "readonly": true,
-          "default": "cta",
+          "enum": ["cta"],
           "options": {
             "hidden": true
           }
@@ -36,6 +36,6 @@
             "type": "string"
         }
     },
-    "required": ["href", "text"],
+    "required": ["name", "href", "text"],
     "additionalProperties": false
 }

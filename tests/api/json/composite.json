@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Standard Band",
-    "description": "A Standard Band",
+    "title": "Composite",
+    "description": "A Composite component",
     "type": "object",
     "properties": {
         "content": {
@@ -10,10 +10,40 @@
             "minItems": 1,
             "items": {
                 "oneOf": [
-                    {"$ref": "text.json"}
+                    {"$ref": "text.json"},
+                    {"$ref": "cta.json"}
                 ]
             }
-        }
+        },
+        "objects": {
+            "title": "Objects",
+            "type": "array",
+            "minItems": 1,
+            "format": "tabs",
+            "items": {
+              "title": "Object",
+              "type": "object",
+              "properties": {
+                "object": {
+                  "$ref": "object.json"
+                },
+                "quote": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "title": "Quote",
+                      "type": "string",
+                      "format": "url"
+                    },
+                    "author": {
+                      "title": "Author",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
     },
     "additionalProperties": false
 }
