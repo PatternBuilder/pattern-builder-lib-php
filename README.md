@@ -24,4 +24,4 @@ $ composer test
 
 ## License
 
-MIT - see the [LICENSE](LICENSE) file for details
+MIT - see the [LICENSE](LICENSE) file for details.
