@@ -6,7 +6,7 @@
         "php": ">=5.3.3",
         "psr/log": "^1.0",
         "justinrainbow/json-schema": "^1.4",
-        "twig/twig": "^1.18"
+        "twig/twig": "^1.38"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.8.1",
